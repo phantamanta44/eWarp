@@ -1,0 +1,4 @@
+name: eWarp
+main: io.github.phantamanta44.ewarp.eWarp
+version: ${version}
+depend: [Vault]
