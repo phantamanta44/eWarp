@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +22,7 @@ public class WarpDB {
 	
 	private File dbFile;
 	private FileConfiguration db;
-	private static Map<String, Warp> dataSet = new HashMap<>();
+	public static Map<String, Warp> dataSet = new HashMap<>();
 	
 	public WarpDB(JavaPlugin source) {
 		dbFile = new File(source.getDataFolder(), "warps.yml");
