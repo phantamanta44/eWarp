@@ -22,12 +22,12 @@ public class PermUtil {
 		if (prv && !can(p, Perm.SET_PR)) return WarpResult.NO_PERM;
 		if (other && !can(p, Perm.SET_TG)) return WarpResult.NO_PERM;
 		if (!can(p, Perm.LIMIT_NONE)) {
-			CountThing count = new CountThing();
-			ew.db.dataSet.forEach((name, warp) -> {
-				if (warp.owner.equals(p.getUniqueId()))
-					count.increment();
-			});
-			if (count.count >= 10) {
+			int count = 0;
+			for (Warp w : ew.db.dataSet.values()) {
+				if (w.owner.equals(p.getUniqueId()))
+					count++;
+			}
+			if (count >= 10) {
 				return WarpResult.LIMIT;
 			}
 		}
@@ -83,15 +83,5 @@ public class PermUtil {
 	
 	public static enum WarpResult {
 		CLEAR, LIMIT, NO_PERM;
-	}
-	
-	private static class CountThing {  // Stupid workaround
-		public int count;
-		public void increment() {
-			count++;
-		}
-		public CountThing() {
-			count = 0;
-		}
 	}
 }

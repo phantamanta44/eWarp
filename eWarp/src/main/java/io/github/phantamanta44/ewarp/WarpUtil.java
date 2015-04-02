@@ -4,9 +4,12 @@ import io.github.phantamanta44.ewarp.WarpDB.Warp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,10 +44,10 @@ public class WarpUtil {
 	}
 	public static void rmDashRf(UUID player) {
 		Set<String> toBeRm = new HashSet<>();
-		ew.db.dataSet.forEach((name, warp) -> {
-			if (warp.owner.equals(player))
-				toBeRm.add(name);
-		});
+		for (Entry<String, Warp> e : ew.db.dataSet.entrySet()) {
+			if (e.getValue().owner.equals(player))
+				toBeRm.add(e.getKey());
+		}
 		for (String name : toBeRm) {
 			ew.db.dataSet.remove(name);
 		}
@@ -54,27 +57,38 @@ public class WarpUtil {
 	public static List<Warp> listPaginatedWarps(int page, boolean priv) {
 		List<Warp> rtnValues = new ArrayList<>();
 		Warp[] entrySet = ew.db.dataSet.values().toArray(new Warp[0]);
-		Arrays.sort(entrySet, (comp1, comp2) -> {
-			return (int)(comp1.creationTime.getTime() - comp2.creationTime.getTime());
+		Arrays.sort(entrySet, new Comparator<Warp>() {
+			public int compare(Warp comp1, Warp comp2) {
+				return (int)(comp1.creationTime.getTime() - comp2.creationTime.getTime());
+			}
 		});
 		List<Warp> entryList = new LinkedList<Warp>(Arrays.asList(entrySet));
 		if (!priv) {
-			entryList.removeIf(w -> {
-				return w.priv;
-			});
+			Iterator<Warp> iter = entryList.iterator();
+			while (iter.hasNext()) {
+				Warp w = iter.next();
+				if (w.priv)
+					iter.remove();
+			}
 		}
 		rtnValues = new LinkedList<>(entryList);
-		rtnValues.removeIf(w -> {
-			return (entryList.indexOf(w) < page * 10) || (entryList.indexOf(w) >= page * 10 + 10);
-		});
+		Iterator<Warp> iter = rtnValues.iterator();
+		while (iter.hasNext()) {
+			Warp w = iter.next();
+			if ((entryList.indexOf(w) < page * 10) || (entryList.indexOf(w) >= page * 10 + 10))
+				iter.remove();
+		}
 		return rtnValues;
 	}
 	
 	public static List<Warp> listPaginatedWarps(int page, boolean priv, UUID p) {
 		List<Warp> rtnValues = listPaginatedWarps(page, priv);
-		rtnValues.removeIf(w-> {
-			return !w.owner.equals(p);
-		});
+		Iterator<Warp> iter = rtnValues.iterator();
+		while (iter.hasNext()) {
+			Warp w = iter.next();
+			if (!w.owner.equals(p))
+				iter.remove();
+		}
 		return rtnValues;
 	}
 	
