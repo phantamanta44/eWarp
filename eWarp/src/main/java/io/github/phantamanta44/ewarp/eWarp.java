@@ -4,6 +4,7 @@ import io.github.phantamanta44.ewarp.WarpDB.Warp;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -186,14 +187,15 @@ public class eWarp extends JavaPlugin {
 	}
 	
 	public static List<String> sanitizeArgs(String[] args) {
-		List<String> argList = Arrays.asList(args);
+		List<String> argList = new LinkedList<String>(Arrays.asList(args));
 		List<String> rtnValues = argList;
 		for (String arg : argList) {
 			if (arg.equals("-p")) {
 				rtnValues.remove(arg);
 			}
 			else if (arg.matches("-+[A-Za-z0-9_]*")) {
-				rtnValues.remove(argList.indexOf(arg) + 1);
+				if (rtnValues.size() > argList.indexOf(arg))
+					rtnValues.remove(argList.indexOf(arg) + 1);
 				rtnValues.remove(argList.indexOf(arg));
 			}
 		}

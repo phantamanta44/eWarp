@@ -4,6 +4,7 @@ import io.github.phantamanta44.ewarp.WarpDB.Warp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +46,7 @@ public class WarpUtil {
 		Arrays.sort(entrySet, (Warp comp1, Warp comp2) -> {
 			return (int)(comp1.creationTime.getTime() - comp2.creationTime.getTime());
 			});
-		List<Warp> entryList = Arrays.asList(entrySet);
+		List<Warp> entryList = new LinkedList<Warp>(Arrays.asList(entrySet));
 		if (!priv) {
 			entryList.removeIf((Warp w) -> {
 				return w.priv;
