@@ -40,7 +40,7 @@ public class eWarp extends JavaPlugin {
 		if (cmd.getName().equals("warp")) {
 			List<String> args = sanitizeArgs(argArray);
 			Map<String, String> parsedArgs = parseArgs(Arrays.asList(argArray));
-			if (args.size() == 0)
+			if (argArray.length == 0)
 				sendPrefixedMessage(sender, "Usage: /warp [--help] [set|list|del|clear]");
 			else {
 				if (args.get(0).equals("set")) {
@@ -177,7 +177,7 @@ public class eWarp extends JavaPlugin {
 		Map<String, String> rtnValues = new HashMap<>();
 		for (String arg : args) {
 			if (arg.matches("-+[A-Za-z0-9_]*")) {
-				if (args.get(args.indexOf(arg) + 1) != null)
+				if (args.indexOf(arg) != args.size() - 1)
 					rtnValues.put(arg, args.get(args.indexOf(arg) + 1));
 				else
 					rtnValues.put(arg, null);
@@ -194,7 +194,7 @@ public class eWarp extends JavaPlugin {
 				rtnValues.remove(arg);
 			}
 			else if (arg.matches("-+[A-Za-z0-9_]*")) {
-				if (rtnValues.size() > argList.indexOf(arg))
+				if (argList.indexOf(arg) != argList.size() - 1)
 					rtnValues.remove(argList.indexOf(arg) + 1);
 				rtnValues.remove(argList.indexOf(arg));
 			}
