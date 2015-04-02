@@ -22,7 +22,7 @@ public class WarpDB {
 	
 	private File dbFile;
 	private FileConfiguration db;
-	public static Map<String, Warp> dataSet = new HashMap<>();
+	public Map<String, Warp> dataSet = new HashMap<>();
 	
 	public WarpDB(JavaPlugin source) {
 		dbFile = new File(source.getDataFolder(), "warps.yml");
@@ -67,12 +67,14 @@ public class WarpDB {
 		public final String name;
 		public final UUID owner;
 		public final Date creationTime;
+		public final boolean priv;
 		public Location loc;
 		
-		public Warp(String n, Location l, UUID o) {
+		public Warp(String n, Location l, UUID o, boolean prv) {
 			name = n;
 			loc = l;
 			owner = o;
+			priv = prv;
 			creationTime = new Date();
 		}
 		
