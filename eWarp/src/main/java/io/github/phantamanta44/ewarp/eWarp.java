@@ -85,8 +85,8 @@ public class eWarp extends JavaPlugin {
 					}
 					int page = 1;
 					try {
-						if (args.get(1) != null) {
-							page = Integer.parseInt(args.get(1));
+						if (args.size() >= 2) {
+							page = Math.max(Integer.parseInt(args.get(1)), 1);
 						}
 					}
 					catch (NumberFormatException ex) {
