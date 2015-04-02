@@ -42,7 +42,7 @@ public class WarpUtil {
 	
 	public static List<Warp> listPaginatedWarps(int page, boolean priv) {
 		List<Warp> rtnValues = new ArrayList<>();
-		Warp[] entrySet = (Warp[])ew.db.dataSet.values().toArray();
+		Warp[] entrySet = ew.db.dataSet.values().toArray(new Warp[0]);
 		Arrays.sort(entrySet, (Warp comp1, Warp comp2) -> {
 			return (int)(comp1.creationTime.getTime() - comp2.creationTime.getTime());
 			});
