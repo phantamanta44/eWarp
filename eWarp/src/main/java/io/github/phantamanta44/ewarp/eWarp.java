@@ -1,5 +1,6 @@
 package io.github.phantamanta44.ewarp;
 
+import io.github.phantamanta44.ewarp.PermUtil.WarpResult;
 import io.github.phantamanta44.ewarp.WarpDB.Warp;
 
 import java.util.Arrays;
@@ -60,16 +61,28 @@ public class eWarp extends JavaPlugin {
 					}
 					if (!db.dataSet.containsKey(args.get(1))) {
 						UUID id = ((Player)sender).getUniqueId();
-						if (parsedArgs.containsKey("o")) {
-							if (Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")) != null)
-								id = Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")).getUniqueId();
+						if (parsedArgs.containsKey("-o")) {
+							if (Bukkit.getServer().getOfflinePlayer(parsedArgs.get("-o")) != null)
+								id = Bukkit.getServer().getOfflinePlayer(parsedArgs.get("-o")).getUniqueId();
 							else {
 								sendPrefixedMessage(sender, "Player not found!");			
 								return true;
 							}
 						}
-						WarpUtil.mkWarp(args.get(1), id, ((Player)sender).getLocation(), parsedArgs.containsKey("p"));
-						sendPrefixedMessage(sender, "Warp set.");
+						boolean prv = parsedArgs.containsKey("-p");
+						WarpResult r = PermUtil.canSet((Player)sender, prv, parsedArgs.containsKey("-o"));
+						switch (r) {
+						case CLEAR:
+							WarpUtil.mkWarp(args.get(1), id, ((Player)sender).getLocation(), prv);
+							sendPrefixedMessage(sender, "Warp set.");
+							break;
+						case NO_PERM:
+							sendPrefixedMessage(sender, "No permission!");
+							break;
+						case LIMIT:
+							sendPrefixedMessage(sender, "You are at your warp limit!");
+							break;
+						}
 					}
 					else {
 						sendPrefixedMessage(sender, "Warp already exists!");
@@ -84,6 +97,7 @@ public class eWarp extends JavaPlugin {
 						sendPrefixedMessage(sender, "page: Page number to view");
 						return true;
 					}
+					
 					int page = 1;
 					try {
 						if (args.size() >= 2) {
@@ -94,17 +108,23 @@ public class eWarp extends JavaPlugin {
 						sendPrefixedMessage(sender, "Page number must be a real integer!");
 						return true;
 					}
+					
+					if (!PermUtil.canGet((Player)sender, parsedArgs.containsKey("-p"), parsedArgs.containsKey("-o"))) {
+						sendPrefixedMessage(sender, "No permission!");
+						return true;
+					}
+					
 					List<Warp> warps;
-					if (parsedArgs.containsKey("o")) {
-						if (Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")) != null)
-							warps = WarpUtil.listPaginatedWarps(page - 1, parsedArgs.containsKey("p"), Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")).getUniqueId());
+					if (parsedArgs.containsKey("-o")) {
+						if (Bukkit.getServer().getOfflinePlayer(parsedArgs.get("-o")) != null)
+								warps = WarpUtil.listPaginatedWarps(page - 1, parsedArgs.containsKey("-p"), Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")).getUniqueId());
 						else {
 							sendPrefixedMessage(sender, "Player not found!");			
 							return true;
 						}
 					}
 					else {
-						warps = WarpUtil.listPaginatedWarps(page - 1, parsedArgs.containsKey("p"));
+						warps = WarpUtil.listPaginatedWarps(page - 1, parsedArgs.containsKey("-p"));
 					}
 					sendPrefixedMessage(sender, ChatColor.GREEN + "Listing warps starting at page " + page + "...");
 					for (Warp w : warps) {
@@ -120,6 +140,10 @@ public class eWarp extends JavaPlugin {
 						return true;
 					}
 					if (db.dataSet.containsKey(args.get(1))) {
+						if (!PermUtil.canRm((Player)sender, args.get(1))) {
+							sendPrefixedMessage(sender, "No permission!");
+							return true;
+						}
 						db.dataSet.remove(args.get(1));
 						sendPrefixedMessage(sender, "Warp removed.");
 					}
@@ -128,7 +152,7 @@ public class eWarp extends JavaPlugin {
 					}
 				}
 				else if (args.get(0).equals("clear")) {
-					if (parsedArgs.containsKey("--help") || args.size() == 1) {
+					if (parsedArgs.containsKey("--help")) {
 						sendPrefixedMessage(sender, "Usage: /warp clear <--confirm> [-o <owner>]");
 						sendPrefixedMessage(sender, "Clears a player's warps.");
 						sendPrefixedMessage(sender, "--confirm flag: Confirm the deletion.");
@@ -139,8 +163,14 @@ public class eWarp extends JavaPlugin {
 						sendPrefixedMessage(sender, "--confirm flag required to clear warps!");
 						return true;
 					}
+					
+					if (!PermUtil.canClr((Player)sender, parsedArgs.containsKey("-o"))) {
+						sendPrefixedMessage(sender, "No permission!");
+						return true;
+					}
+					
 					UUID id = ((Player)sender).getUniqueId();
-					if (parsedArgs.containsKey("o")) {
+					if (parsedArgs.containsKey("-o")) {
 						if (Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")) != null)
 							id = Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")).getUniqueId();
 						else {
@@ -159,14 +189,11 @@ public class eWarp extends JavaPlugin {
 					}
 					if (db.dataSet.containsKey(args.get(0))) {
 						Warp w = db.dataSet.get(args.get(0));
-						if (w.priv) {
-							if (w.owner == ((Player)sender).getUniqueId()) {
-								w.warpPlayer((Player)sender);
-							}
+						if (!PermUtil.canGo((Player)sender, w)) {
+							sendPrefixedMessage(sender, "No permission!");
+							return true;
 						}
-						else {
-							w.warpPlayer((Player)sender);
-						}
+						w.warpPlayer((Player)sender);
 						sendPrefixedMessage(sender, "Warped to " + w.name + ".");
 					}
 					else {
@@ -194,9 +221,9 @@ public class eWarp extends JavaPlugin {
 	
 	public static List<String> sanitizeArgs(String[] args) {
 		List<String> argList = new LinkedList<String>(Arrays.asList(args));
-		List<String> rtnValues = argList;
+		List<String> rtnValues = new LinkedList<String>(argList);
 		for (String arg : argList) {
-			if (arg.equals("-p") || arg.equals("--help")) {
+			if (arg.equals("-p") || arg.equals("--help") || arg.equals("--confirm")) {
 				rtnValues.remove(arg);
 			}
 			else if (arg.matches("-+[A-Za-z0-9_]*")) {

@@ -6,3 +6,43 @@ commands:
         description: eWarp root command
         aliases: w
         usage: "/warp"
+permissions:
+    ewarp.set:
+        description: Set warps
+        default: true
+    ewarp.set.private:
+        description: Set private warps
+        default: op
+    ewarp.set.other:
+        description: Set warps for others
+        default: op
+    ewarp.list:
+        description: List warps
+        default: true
+    ewarp.list.private:
+        description: List private warps
+        default: op
+    ewarp.list.other:
+        description: List warps for a player
+        default: true
+    ewarp.warp:
+        description: Warp to warps
+        default: true
+    ewarp.warp.private:
+        description: Warp to unauthorized private warps
+        default: op
+    ewarp.rm:
+        description: Remove warps
+        default: true
+    ewarp.rm.other:
+        description: Remove warps of others
+        default: op
+    ewarp.clear:
+        description: Clear warps
+        default: true
+    ewarp.clear.other:
+        description: Clear warps of others
+        default: op
+    ewarp.limit.none:
+        description: Bypass warp limits
+        default: op

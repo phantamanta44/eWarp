@@ -16,6 +16,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.google.gson.Gson;
 
@@ -90,7 +92,10 @@ public class WarpDB {
 		}
 		
 		public void warpPlayer(Player p) {
+			WarpUtil.teleportEffect(p.getLocation());
 			p.teleport(resolveLocation());
+			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1, true, false));
+			WarpUtil.teleportEffect(p.getLocation());
 		}
 		
 		public Location resolveLocation() {
