@@ -112,8 +112,8 @@ public class eWarp extends JavaPlugin {
 						sender.sendMessage(w.name + " | by " + w.owner + " at " + w.getCreationTime() + String.format(" | @(%d,%d,%d)", l.getBlockX(), l.getBlockY(), l.getBlockZ()));
 					}
 				}
-				else if (args.get(0).equals("del") || args.size() == 1) {
-					if (parsedArgs.containsKey("--help")) {
+				else if (args.get(0).equals("del")) {
+					if (parsedArgs.containsKey("--help") || args.size() == 1) {
 						sendPrefixedMessage(sender, "Usage: /warp del <warpname>");
 						sendPrefixedMessage(sender, "Deletes a warp.");
 						sendPrefixedMessage(sender, "warpname: Name of the warp to remove");
