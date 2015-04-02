@@ -109,7 +109,7 @@ public class eWarp extends JavaPlugin {
 					sendPrefixedMessage(sender, ChatColor.GREEN + "Listing warps starting at page " + page + "...");
 					for (Warp w : warps) {
 						Location l = w.resolveLocation();
-						sender.sendMessage(w.name + " | by " + w.owner + " at " + w.getCreationTime() + String.format(" | @(%d,%d,%d)", l.getBlockX(), l.getBlockY(), l.getBlockZ()));
+						sender.sendMessage(w.name + " | by " + Bukkit.getOfflinePlayer(w.owner).getName() + " at " + w.getCreationTime() + String.format(" | @(%d,%d,%d)", l.getBlockX(), l.getBlockY(), l.getBlockZ()));
 					}
 				}
 				else if (args.get(0).equals("del")) {
@@ -201,8 +201,8 @@ public class eWarp extends JavaPlugin {
 			}
 			else if (arg.matches("-+[A-Za-z0-9_]*")) {
 				if (argList.indexOf(arg) != argList.size() - 1)
-					rtnValues.remove(argList.indexOf(arg) + 1);
-				rtnValues.remove(argList.indexOf(arg));
+					rtnValues.remove(argList.get(argList.indexOf(arg) + 1));
+				rtnValues.remove(arg);
 			}
 		}
 		return rtnValues;
