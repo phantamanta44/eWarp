@@ -40,11 +40,11 @@ public class eWarp extends JavaPlugin {
 			List<String> args = sanitizeArgs(argArray);
 			Map<String, String> parsedArgs = parseArgs(Arrays.asList(argArray));
 			if (args.size() == 0)
-				sendPrefixedMessage(sender, ChatColor.RED + "Usage: /warp [--help] [set|list|del|clear]");
+				sendPrefixedMessage(sender, "Usage: /warp [--help] [set|list|del|clear]");
 			else {
 				if (args.get(0).equals("set")) {
 					if (parsedArgs.containsKey("--help") || args.size() == 1) {
-						sendPrefixedMessage(sender, ChatColor.RED + "Usage: /warp set [-p] [-o <owner>] <warpname>");
+						sendPrefixedMessage(sender, "Usage: /warp set [-p] [-o <owner>] <warpname>");
 						sendPrefixedMessage(sender, "Creates a warp.");
 						sendPrefixedMessage(sender, "-p flag: Set warp as private");
 						sendPrefixedMessage(sender, "-o flag: Designate warp owner");
@@ -57,20 +57,20 @@ public class eWarp extends JavaPlugin {
 							if (Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")) != null)
 								id = Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")).getUniqueId();
 							else {
-								sendPrefixedMessage(sender, ChatColor.RED + "Player not found!");			
+								sendPrefixedMessage(sender, "Player not found!");			
 								return true;
 							}
 						}
 						WarpUtil.mkWarp(args.get(1), id, ((Player)sender).getLocation(), parsedArgs.containsKey("p"));
-						sendPrefixedMessage(sender, ChatColor.GREEN + "Warp set.");
+						sendPrefixedMessage(sender, "Warp set.");
 					}
 					else {
-						sendPrefixedMessage(sender, ChatColor.RED + "Warp already exists!");
+						sendPrefixedMessage(sender, "Warp already exists!");
 					}
 				}
 				else if (args.get(0).equals("list")) {
 					if (parsedArgs.containsKey("--help")) {
-						sendPrefixedMessage(sender, ChatColor.RED + "Usage: /warp list [-p] [-o <owner>] [page]");
+						sendPrefixedMessage(sender, "Usage: /warp list [-p] [-o <owner>] [page]");
 						sendPrefixedMessage(sender, "Lists warps.");
 						sendPrefixedMessage(sender, "-p flag: List private warps");
 						sendPrefixedMessage(sender, "-o flag: Designate warp owner");
@@ -84,7 +84,7 @@ public class eWarp extends JavaPlugin {
 						}
 					}
 					catch (NumberFormatException ex) {
-						sendPrefixedMessage(sender, ChatColor.RED + "Page number must be a real integer!");
+						sendPrefixedMessage(sender, "Page number must be a real integer!");
 						return true;
 					}
 					List<Warp> warps;
@@ -92,14 +92,14 @@ public class eWarp extends JavaPlugin {
 						if (Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")) != null)
 							warps = WarpUtil.listPaginatedWarps(page - 1, parsedArgs.containsKey("p"), Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")).getUniqueId());
 						else {
-							sendPrefixedMessage(sender, ChatColor.RED + "Player not found!");			
+							sendPrefixedMessage(sender, "Player not found!");			
 							return true;
 						}
 					}
 					else {
 						warps = WarpUtil.listPaginatedWarps(page - 1, parsedArgs.containsKey("p"));
 					}
-					sendPrefixedMessage(sender, "Listing warps starting at page " + page + "...");
+					sendPrefixedMessage(sender, ChatColor.GREEN + "Listing warps starting at page " + page + "...");
 					for (Warp w : warps) {
 						Location l = w.loc;
 						sender.sendMessage(w.name + " | by " + w.owner + " at " + w.getCreationTime() + String.format(" | @(%d,%d,%d)", l.getBlockX(), l.getBlockY(), l.getBlockZ()));
@@ -107,29 +107,29 @@ public class eWarp extends JavaPlugin {
 				}
 				else if (args.get(0).equals("del") || args.size() == 1) {
 					if (parsedArgs.containsKey("--help")) {
-						sendPrefixedMessage(sender, ChatColor.RED + "Usage: /warp del <warpname>");
+						sendPrefixedMessage(sender, "Usage: /warp del <warpname>");
 						sendPrefixedMessage(sender, "Deletes a warp.");
 						sendPrefixedMessage(sender, "warpname: Name of the warp to remove");
 						return true;
 					}
 					if (db.dataSet.containsKey(args.get(1))) {
 						db.dataSet.remove(args.get(1));
-						sendPrefixedMessage(sender, ChatColor.GREEN + "Warp removed.");
+						sendPrefixedMessage(sender, "Warp removed.");
 					}
 					else {
-						sendPrefixedMessage(sender, ChatColor.RED + "Warp doesn't exist!");
+						sendPrefixedMessage(sender, "Warp doesn't exist!");
 					}
 				}
 				else if (args.get(0).equals("clear")) {
 					if (parsedArgs.containsKey("--help") || args.size() == 1) {
-						sendPrefixedMessage(sender, ChatColor.RED + "Usage: /warp clear <--confirm> [-o <owner>]");
+						sendPrefixedMessage(sender, "Usage: /warp clear <--confirm> [-o <owner>]");
 						sendPrefixedMessage(sender, "Clears a player's warps.");
 						sendPrefixedMessage(sender, "--confirm flag: Confirm the deletion.");
 						sendPrefixedMessage(sender, "-o flag: Designate warp owner");
 						return true;
 					}
 					if (!parsedArgs.containsKey("--confirm")) {
-						sendPrefixedMessage(sender, ChatColor.RED + "--confirm flag required to clear warps!");
+						sendPrefixedMessage(sender, "--confirm flag required to clear warps!");
 						return true;
 					}
 					UUID id = ((Player)sender).getUniqueId();
@@ -137,16 +137,16 @@ public class eWarp extends JavaPlugin {
 						if (Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")) != null)
 							id = Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")).getUniqueId();
 						else {
-							sendPrefixedMessage(sender, ChatColor.RED + "Player not found!");			
+							sendPrefixedMessage(sender, "Player not found!");			
 							return true;
 						}
 					}
 					WarpUtil.rmDashRf(id);
-					sendPrefixedMessage(sender, ChatColor.GREEN + "Warps cleared.");
+					sendPrefixedMessage(sender, "Warps cleared.");
 				}
 				else {
 					if (parsedArgs.containsKey("--help")) {
-						sendPrefixedMessage(sender, ChatColor.RED + "Usage: /warp <warpname>");
+						sendPrefixedMessage(sender, "Usage: /warp <warpname>");
 						sendPrefixedMessage(sender, "warpname: Name of the warp to travel to");
 						return true;
 					}
@@ -160,10 +160,10 @@ public class eWarp extends JavaPlugin {
 						else {
 							w.warpPlayer((Player)sender);
 						}
-						sendPrefixedMessage(sender, ChatColor.GREEN + "Warped to " + w.name + ".");
+						sendPrefixedMessage(sender, "Warped to " + w.name + ".");
 					}
 					else {
-						sendPrefixedMessage(sender, ChatColor.RED + "Warp doesn't exist!");
+						sendPrefixedMessage(sender, "Warp doesn't exist!");
 					}
 				}
 			}
