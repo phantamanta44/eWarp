@@ -196,7 +196,7 @@ public class eWarp extends JavaPlugin {
 		List<String> argList = new LinkedList<String>(Arrays.asList(args));
 		List<String> rtnValues = argList;
 		for (String arg : argList) {
-			if (arg.equals("-p")) {
+			if (arg.equals("-p") || arg.equals("--help")) {
 				rtnValues.remove(arg);
 			}
 			else if (arg.matches("-+[A-Za-z0-9_]*")) {
