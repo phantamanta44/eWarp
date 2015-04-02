@@ -1,4 +1,8 @@
 name: eWarp
 main: io.github.phantamanta44.ewarp.eWarp
 version: ${version}
-depend: [Vault]
+commands:
+    warp:
+        description: eWarp root command
+        aliases: w
+        usage: "/warp"
