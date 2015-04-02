@@ -40,8 +40,14 @@ public class eWarp extends JavaPlugin {
 		if (cmd.getName().equals("warp")) {
 			List<String> args = sanitizeArgs(argArray);
 			Map<String, String> parsedArgs = parseArgs(Arrays.asList(argArray));
-			if (argArray.length == 0)
+			if (args.size() == 0) {
+				if (parsedArgs.containsKey("--help")) {
+					sendPrefixedMessage(sender, "Usage: /warp <warpname>");
+					sendPrefixedMessage(sender, "warpname: Name of the warp to travel to");
+					return true;
+				}
 				sendPrefixedMessage(sender, "Usage: /warp [--help] [set|list|del|clear]");
+			}
 			else {
 				if (args.get(0).equals("set")) {
 					if (parsedArgs.containsKey("--help") || args.size() == 1) {
