@@ -11,7 +11,6 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -108,8 +107,7 @@ public class eWarp extends JavaPlugin {
 					}
 					sendPrefixedMessage(sender, ChatColor.GREEN + "Listing warps starting at page " + page + "...");
 					for (Warp w : warps) {
-						Location l = w.loc;
-						sender.sendMessage(w.name + " | by " + w.owner + " at " + w.getCreationTime() + String.format(" | @(%d,%d,%d)", l.getBlockX(), l.getBlockY(), l.getBlockZ()));
+						sender.sendMessage(w.name + " | by " + w.owner + " at " + w.getCreationTime() + String.format(" | @(%d,%d,%d)", w.x, w.y, w.z));
 					}
 				}
 				else if (args.get(0).equals("del")) {

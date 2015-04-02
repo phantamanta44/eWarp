@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -65,14 +66,20 @@ public class WarpDB {
 	public static class Warp {
 		private static final DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		public final String name;
-		public final UUID owner;
+		public final UUID owner, world;
 		public final Date creationTime;
 		public final boolean priv;
-		public Location loc;
+		public double x, y, z;
+		public float pitch, yaw;
 		
 		public Warp(String n, Location l, UUID o, boolean prv) {
 			name = n;
-			loc = l;
+			x = l.getX();
+			y = l.getY();
+			z = l.getZ();
+			world = l.getWorld().getUID();
+			pitch = l.getPitch();
+			yaw = l.getYaw();
 			owner = o;
 			priv = prv;
 			creationTime = new Date();
@@ -83,7 +90,11 @@ public class WarpDB {
 		}
 		
 		public void warpPlayer(Player p) {
-			p.teleport(loc);
+			p.teleport(resolveLocation());
+		}
+		
+		public Location resolveLocation() {
+			return new Location(Bukkit.getServer().getWorld(world), x, y, z, yaw, pitch);
 		}
 	}
 }
