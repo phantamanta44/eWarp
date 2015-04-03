@@ -95,8 +95,8 @@ public class WarpUtil {
 	public static void teleportEffect(Location loc) {
 		loc.getWorld().playEffect(loc, Effect.SMOKE, BlockFace.UP);
 		loc.getWorld().playEffect(loc, Effect.STEP_SOUND, Material.LAVA);
-		for (float i = 0.5F; i <= 2; i += 0.25F) {
-			loc.getWorld().playSound(loc, Sound.ENDERMAN_TELEPORT, 1.0F, i);
-		}
+		loc.getWorld().playSound(loc, Sound.ENDERMAN_TELEPORT, 1.0F, 0.5F);
+		loc.getWorld().playSound(loc, Sound.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+		loc.getWorld().playSound(loc, Sound.IRONGOLEM_HIT, 1.0F, 1.73F);
 	}
 }

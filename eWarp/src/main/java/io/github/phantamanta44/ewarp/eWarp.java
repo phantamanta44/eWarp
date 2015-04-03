@@ -117,7 +117,7 @@ public class eWarp extends JavaPlugin {
 					List<Warp> warps;
 					if (parsedArgs.containsKey("-o")) {
 						if (Bukkit.getServer().getOfflinePlayer(parsedArgs.get("-o")) != null)
-								warps = WarpUtil.listPaginatedWarps(page - 1, parsedArgs.containsKey("-p"), Bukkit.getServer().getOfflinePlayer(parsedArgs.get("o")).getUniqueId());
+								warps = WarpUtil.listPaginatedWarps(page - 1, parsedArgs.containsKey("-p"), Bukkit.getServer().getOfflinePlayer(parsedArgs.get("-o")).getUniqueId());
 						else {
 							sendPrefixedMessage(sender, "Player not found!");			
 							return true;
@@ -126,10 +126,10 @@ public class eWarp extends JavaPlugin {
 					else {
 						warps = WarpUtil.listPaginatedWarps(page - 1, parsedArgs.containsKey("-p"));
 					}
-					sendPrefixedMessage(sender, ChatColor.GREEN + "Listing warps starting at page " + page + "...");
+					sendPrefixedMessage(sender, "Listing warps starting at page " + page + "...");
 					for (Warp w : warps) {
 						Location l = w.resolveLocation();
-						sender.sendMessage(w.name + " | by " + Bukkit.getOfflinePlayer(w.owner).getName() + " at " + w.getCreationTime() + String.format(" | @(%d,%d,%d)", l.getBlockX(), l.getBlockY(), l.getBlockZ()));
+						sender.sendMessage(ChatColor.GREEN + w.name + " | by " + Bukkit.getOfflinePlayer(w.owner).getName() + " at " + w.getCreationTime() + String.format(" | @(%d,%d,%d)", l.getBlockX(), l.getBlockY(), l.getBlockZ()));
 					}
 				}
 				else if (args.get(0).equals("del")) {

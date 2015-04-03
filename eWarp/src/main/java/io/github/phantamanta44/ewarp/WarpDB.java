@@ -94,7 +94,7 @@ public class WarpDB {
 		public void warpPlayer(Player p) {
 			WarpUtil.teleportEffect(p.getLocation());
 			p.teleport(resolveLocation());
-			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1, true, false));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1));
 			WarpUtil.teleportEffect(p.getLocation());
 		}
 		
