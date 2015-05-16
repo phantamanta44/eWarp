@@ -21,7 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 @SuppressWarnings("deprecation")
 public class eWarp extends JavaPlugin {
 	
-	public static final String msgPrefix = ChatColor.AQUA + "ExtraPvP " + ChatColor.GRAY + "» " + ChatColor.RESET;
+	public static final String msgPrefix = ChatColor.AQUA + "EclipsePvP " + ChatColor.GRAY + "» " + ChatColor.RESET;
 	public WarpDB db;
 	
 	@Override
